@@ -1,0 +1,5 @@
+{
+  "name": "RealFlap - Realistic Avian Simulator",
+  "description": "A high-fidelity, realistic physics-based bird flight simulator with photorealistic environments and fluid animations.",
+  "requestFramePermissions": []
+}
