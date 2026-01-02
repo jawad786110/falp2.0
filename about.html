@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>About – USN Blog</title>
+    <meta name="description"
+        content="Learn about the official University of Sindh, Campus Naushahro Feroze blog. News, research, student achievements, and campus updates." />
+    <link rel="stylesheet" href="css/style.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+</head>
+
+<body>
+    <!-- Sidebar Overlay for Mobile -->
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="index.html" class="sidebar-logo">USN Blog</a>
+            <p class="sidebar-tagline">University of Sindh, Naushahro Feroze</p>
+        </div>
+
+        <!-- User Profile Section (shown when logged in) -->
+        <div class="sidebar-profile" id="sidebar-profile">
+            <div class="profile-info">
+                <img src="" alt="User avatar" class="profile-avatar" id="profile-avatar">
+                <div class="profile-details">
+                    <h4 id="profile-name">User</h4>
+                    <p id="profile-role">Author</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation Links -->
+        <nav class="sidebar-nav">
+            <ul>
+                <li><a href="index.html"><span class="nav-icon">🏠</span> Home</a></li>
+                <li><a href="about.html" class="active"><span class="nav-icon">ℹ️</span> About</a></li>
+                <li id="dashboard-link" style="display: none;">
+                    <a href="#"><span class="nav-icon">📊</span> Dashboard</a>
+                </li>
+                <li id="admin-link" style="display: none;">
+                    <a href="admin-dashboard.html"><span class="nav-icon">👑</span> Admin Panel</a>
+                </li>
+                <li id="auth-link">
+                    <a href="auth.html"><span class="nav-icon">🔑</span> Login</a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Logout Button (shown when logged in) -->
+        <div class="sidebar-footer" id="sidebar-footer" style="display: none;">
+            <button id="sidebar-logout">🚪 Logout</button>
+        </div>
+    </aside>
+
+    <!-- Mobile Toggle Button -->
+    <button class="sidebar-toggle" id="sidebar-toggle" aria-label="Toggle sidebar">☰</button>
+
+    <!-- Main Content Wrapper -->
+    <div class="main-wrapper">
+        <div id="antigravity-canvas"></div>
+
+        <main class="content glass" style="padding:2rem; max-width:800px; margin:auto;">
+            <h1>About This Blog</h1>
+            <p>This blog is the official communication channel for the University of Sindh, Campus Naushahro Feroze. It
+                showcases news, research highlights, student achievements, and campus development updates.</p>
+            <p>Our goal is to foster community engagement and provide a modern, premium‑looking platform that reflects
+                the
+                university's commitment to excellence.</p>
+        </main>
+
+        <footer class="site-footer">
+            <p>&copy; 2025 | Student-run blog about University of Sindh (Naushahro Feroze) • Created by Jawad</p>
+        </footer>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/three.min.js"></script>
+    <script src="js/antigravity.js" defer></script>
+    <script type="module" src="js/sidebar.js"></script>
+</body>
+
+</html>

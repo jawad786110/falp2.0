@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Author Dashboard - Campus Blog</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 2rem;
+        }
+
+        .dashboard-header {
+            margin-bottom: 2rem;
+        }
+
+        .dashboard-header h1 {
+            color: var(--text-main);
+            margin-bottom: 0.5rem;
+        }
+
+        .dashboard-header p {
+            color: var(--text-secondary);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #d97706;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .posts-table {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .table-header {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+            padding: 1rem 1.5rem;
+            background: rgba(255, 255, 255, 0.02);
+            border-bottom: 1px solid var(--glass-border);
+            font-weight: 600;
+            color: var(--text-main);
+            font-size: 0.9rem;
+        }
+
+        .post-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--glass-border);
+            align-items: center;
+            transition: background 0.3s;
+        }
+
+        .post-row:hover {
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .post-row:last-child {
+            border-bottom: none;
+        }
+
+        .post-title {
+            color: var(--text-main);
+            font-weight: 500;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-draft {
+            background: rgba(156, 163, 175, 0.2);
+            color: #9ca3af;
+        }
+
+        .status-pending {
+            background: rgba(251, 191, 36, 0.2);
+            color: #fbbf24;
+        }
+
+        .status-published {
+            background: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+        }
+
+        .status-rejected {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+        }
+
+        .post-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .action-btn {
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            border: 1px solid var(--glass-border);
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-main);
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.3s;
+        }
+
+        .action-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: #d97706;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-secondary);
+        }
+
+        .empty-state h3 {
+            color: var(--text-main);
+            margin-bottom: 0.5rem;
+        }
+
+        /* Modal for creating/editing posts */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .modal-content {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 2rem;
+            max-width: 800px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            backdrop-filter: blur(10px);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Sidebar Overlay for Mobile -->
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="index.html" class="sidebar-logo">USN Blog</a>
+            <p class="sidebar-tagline">University of Sindh, Naushahro Feroze</p>
+        </div>
+
+        <!-- User Profile Section (shown when logged in) -->
+        <div class="sidebar-profile" id="sidebar-profile">
+            <div class="profile-info">
+                <img src="" alt="User avatar" class="profile-avatar" id="profile-avatar">
+                <div class="profile-details">
+                    <h4 id="profile-name">User</h4>
+                    <p id="profile-role">Author</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation Links -->
+        <nav class="sidebar-nav">
+            <ul>
+                <li><a href="index.html"><span class="nav-icon">🏠</span> Home</a></li>
+                <li><a href="about.html"><span class="nav-icon">ℹ️</span> About</a></li>
+                <li id="dashboard-link" style="display: none;">
+                    <a href="#" class="active"><span class="nav-icon">📊</span> Dashboard</a>
+                </li>
+                <li id="admin-link" style="display: none;">
+                    <a href="admin-dashboard.html"><span class="nav-icon">👑</span> Admin Panel</a>
+                </li>
+                <li id="auth-link">
+                    <a href="auth.html"><span class="nav-icon">🔑</span> Login</a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Logout Button (shown when logged in) -->
+        <div class="sidebar-footer" id="sidebar-footer" style="display: none;">
+            <button id="sidebar-logout">🚪 Logout</button>
+        </div>
+    </aside>
+
+    <!-- Mobile Toggle Button -->
+    <button class="sidebar-toggle" id="sidebar-toggle" aria-label="Toggle sidebar">☰</button>
+
+    <!-- Main Content Wrapper -->
+    <div class="main-wrapper">
+        <main class="content">
+            <div class="dashboard-container">
+                <div class="dashboard-header">
+                    <h1>Welcome, <span id="user-name">Author</span>!</h1>
+                    <p>Manage your blog posts and track your content</p>
+                </div>
+
+                <!-- Stats -->
+                <div class="stats-grid">
+                    <div class="stat-card glass">
+                        <div class="stat-number" id="stat-total">0</div>
+                        <div class="stat-label">Total Posts</div>
+                    </div>
+                    <div class="stat-card glass">
+                        <div class="stat-number" id="stat-published">0</div>
+                        <div class="stat-label">Published</div>
+                    </div>
+                    <div class="stat-card glass">
+                        <div class="stat-number" id="stat-pending">0</div>
+                        <div class="stat-label">Pending Review</div>
+                    </div>
+                    <div class="stat-card glass">
+                        <div class="stat-number" id="stat-drafts">0</div>
+                        <div class="stat-label">Drafts</div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="action-buttons">
+                    <button class="primary-btn" id="create-post-btn">✍️ Create New Post</button>
+                    <button class="filter-btn" id="filter-all">All Posts</button>
+                    <button class="filter-btn" id="filter-published">Published</button>
+                    <button class="filter-btn" id="filter-pending">Pending</button>
+                    <button class="filter-btn" id="filter-drafts">Drafts</button>
+                </div>
+
+                <!-- Posts Table -->
+                <div class="posts-table">
+                    <div class="table-header">
+                        <div>Title</div>
+                        <div>Category</div>
+                        <div>Status</div>
+                        <div>Date</div>
+                        <div>Actions</div>
+                    </div>
+                    <div id="posts-list">
+                        <!-- Populated by JS -->
+                        <div class="empty-state">
+                            <h3>Loading posts...</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Create/Edit Post Modal -->
+        <div id="post-modal" class="modal">
+            <div class="modal-content">
+                <h2 id="modal-title">Create New Post</h2>
+                <form id="post-form" style="margin-top: 1.5rem;">
+                    <div class="form-group">
+                        <label for="title">Post Title <span
+                                style="color: var(--text-secondary); font-size: 0.85rem;">(Max
+                                100 characters)</span></label>
+                        <input type="text" id="title" required placeholder="Enter post title" maxlength="100"
+                            aria-label="Post title">
+                        <div
+                            style="text-align: right; font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.25rem;">
+                            <span id="title-count">0</span>/100
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="category">Category</label>
+                        <select id="category" required>
+                            <option value="Technology">Technology</option>
+                            <option value="Campus Life">Campus Life</option>
+                            <option value="Research">Research</option>
+                            <option value="Events">Events</option>
+                            <option value="Student Guide">Student Guide</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="readTime">Read Time</label>
+                        <input type="text" id="readTime" required placeholder="e.g. 5 min read"
+                            pattern="[0-9]+ min read" aria-label="Estimated reading time">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="image-file">Feature Image <span
+                                style="color: var(--text-secondary); font-size: 0.85rem;">(Max 5MB,
+                                JPG/PNG)</span></label>
+                        <input type="file" id="image-file" accept="image/jpeg,image/png,image/jpg"
+                            aria-label="Upload feature image">
+                        <img id="img-preview" src="" alt="Image preview"
+                            style="max-width: 100%; margin-top: 1rem; display: none; border-radius: 8px;">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="excerpt">Excerpt (Short Summary) <span
+                                style="color: var(--text-secondary); font-size: 0.85rem;">(Max 200
+                                characters)</span></label>
+                        <input type="text" id="excerpt" required placeholder="Short description for the card"
+                            maxlength="200" aria-label="Post excerpt">
+                        <div
+                            style="text-align: right; font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.25rem;">
+                            <span id="excerpt-count">0</span>/200
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="content">Full Content (HTML allowed) <span
+                                style="color: var(--text-secondary); font-size: 0.85rem;">(Min 100
+                                characters)</span></label>
+                        <textarea id="content" required placeholder="<p>Write your blog post here...</p>"
+                            minlength="100" style="min-height: 200px;" aria-label="Post content"></textarea>
+                        <div
+                            style="text-align: right; font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.25rem;">
+                            <span id="content-count">0</span> characters
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                        <button type="submit" class="primary-btn" id="save-draft-btn" data-status="draft">Save as
+                            Draft</button>
+                        <button type="submit" class="primary-btn" id="submit-review-btn" data-status="pending"
+                            style="background: linear-gradient(135deg, #22c55e, #16a34a);">Submit for Review</button>
+                        <button type="button" class="filter-btn" id="cancel-btn">Cancel</button>
+                    </div>
+
+                    <div id="status-msg" class="status-msg" style="margin-top: 1rem; display: none;"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="js/author.js"></script>
+    <script type="module" src="js/sidebar.js"></script>
+</body>
+
+</html>

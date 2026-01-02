@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Campus Blog</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .admin-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-main);
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.8rem;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            color: var(--text-main);
+            font-size: 1rem;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 150px;
+        }
+
+        .file-upload {
+            border: 2px dashed var(--glass-border);
+            padding: 2rem;
+            text-align: center;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: border-color 0.3s;
+        }
+
+        .file-upload:hover {
+            border-color: #d97706;
+        }
+
+        .admin-nav {
+            margin-bottom: 2rem;
+            display: flex;
+            gap: 1rem;
+        }
+
+        .status-msg {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .status-success {
+            background: rgba(0, 255, 0, 0.1);
+            color: #4ade80;
+            border: 1px solid #4ade80;
+        }
+
+        .status-error {
+            background: rgba(255, 0, 0, 0.1);
+            color: #f87171;
+            border: 1px solid #f87171;
+        }
+
+        .posts-list {
+            margin-top: 3rem;
+        }
+
+        .admin-post-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+        }
+
+        .delete-btn {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        /* Preview Image */
+        #img-preview {
+            max-width: 100%;
+            height: auto;
+            margin-top: 1rem;
+            border-radius: 8px;
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="site-header">
+        <nav class="nav">
+            <a href="index.html" class="logo">Blog Admin</a>
+            <ul class="nav-links">
+                <li><a href="index.html">View Site</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="content">
+        <div class="admin-container glass" style="margin-top: 2rem;">
+            <h1>Manage Blog Posts</h1>
+
+            <div class="admin-nav">
+                <button id="show-add-btn" class="filter-btn active">Add New Post</button>
+                <button id="show-list-btn" class="filter-btn">Manage Existing</button>
+                <button id="ai-fill-btn" class="filter-btn" style="border-color: #8b5cf6; color: #8b5cf6;">Load AI
+                    Demo</button>
+            </div>
+
+            <!-- ADD POST FORM -->
+            <div id="add-post-section">
+                <form id="post-form">
+                    <div class="form-group">
+                        <label for="title">Post Title</label>
+                        <input type="text" id="title" required placeholder="Enter post title">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="author">Author Name</label>
+                        <input type="text" id="author" required placeholder="e.g. Dr. Sarah">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="category">Category</label>
+                        <select id="category" required>
+                            <option value="Technology">Technology</option>
+                            <option value="Campus Life">Campus Life</option>
+                            <option value="Research">Research</option>
+                            <option value="Events">Events</option>
+                            <option value="Student Guide">Student Guide</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="readTime">Read Time</label>
+                        <input type="text" id="readTime" required placeholder="e.g. 5 min read">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="image">Feature Image</label>
+                        <input type="file" id="image-file" accept="image/*">
+                        <img id="img-preview" src="" alt="Preview">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="excerpt">Excerpt (Short Summary)</label>
+                        <input type="text" id="excerpt" required placeholder="Short description for the card">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="content">Full Content (HTML allowed)</label>
+                        <textarea id="content" required placeholder="<p>Write your blog post here...</p>"></textarea>
+                    </div>
+
+                    <button type="submit" class="primary-btn" id="submit-btn">Publish Post</button>
+
+                    <div id="status-msg" class="status-msg"></div>
+                </form>
+            </div>
+
+            <!-- MANAGE POSTS LIST -->
+            <div id="manage-posts-section" style="display: none;">
+                <div id="admin-posts-list" class="posts-list">
+                    <p>Loading posts...</p>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Module type important for imports -->
+    <script type="module" src="js/admin.js"></script>
+</body>
+
+</html>

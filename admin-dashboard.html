@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Campus Blog</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 2rem;
+        }
+
+        .dashboard-header {
+            margin-bottom: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            max-width: 900px;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 1.25rem;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #d97706;
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid var(--glass-border);
+        }
+
+        .tab {
+            padding: 1rem 1.5rem;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        .tab.active {
+            color: #d97706;
+            border-bottom-color: #d97706;
+        }
+
+        .posts-grid {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .post-review-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            align-items: flex-start;
+        }
+
+        .post-thumbnail {
+            width: 150px;
+            height: 100px;
+            background-size: cover;
+            background-position: center;
+            border-radius: 8px;
+            flex-shrink: 0;
+        }
+
+        .post-info {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .post-info h3 {
+            color: var(--text-main);
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+            line-height: 1.4;
+            word-break: break-word;
+        }
+
+        .post-meta {
+            display: flex;
+            gap: 1rem;
+            margin: 0.5rem 0;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            flex-wrap: wrap;
+        }
+
+        .post-excerpt {
+            color: var(--text-secondary);
+            margin: 0.5rem 0;
+            font-size: 0.9rem;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .post-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            flex-shrink: 0;
+        }
+
+        .approve-btn {
+            padding: 0.75rem 1.5rem;
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .reject-btn {
+            padding: 0.75rem 1.5rem;
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            border: 1px solid #ef4444;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .approve-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(34, 197, 94, 0.4);
+        }
+
+        .reject-btn:hover {
+            background: rgba(239, 68, 68, 0.2);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-secondary);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .post-review-card {
+                flex-direction: column;
+            }
+
+            .post-thumbnail {
+                width: 100%;
+                height: 150px;
+            }
+
+            .post-actions {
+                flex-direction: row;
+                width: 100%;
+            }
+        }
+
+        @media (min-width: 769px) {
+            .dashboard-container {
+                max-width: 1200px;
+            }
+        }
+
+        @media (max-width: 1200px) {
+            .dashboard-container {
+                max-width: 100%;
+            }
+
+            .posts-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .post-review-card {
+                grid-template-columns: 100px 1fr;
+            }
+
+            .post-thumbnail {
+                width: 100px;
+                height: 70px;
+            }
+
+            .post-actions {
+                grid-column: 1 / -1;
+                flex-direction: row;
+                justify-content: flex-end;
+                margin-top: 1rem;
+            }
+        }
+
+        @media (max-width: 968px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            .post-review-card {
+                grid-template-columns: 1fr;
+            }
+
+            .post-thumbnail {
+                width: 100%;
+                max-width: 300px;
+                height: 150px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .dashboard-container {
+                padding: 1rem;
+            }
+        }
+
+        .rejection-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .rejection-modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Sidebar Overlay for Mobile -->
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="index.html" class="sidebar-logo">USN Blog</a>
+            <p class="sidebar-tagline">University of Sindh, Naushahro Feroze</p>
+        </div>
+
+        <!-- User Profile Section (shown when logged in) -->
+        <div class="sidebar-profile" id="sidebar-profile">
+            <div class="profile-info">
+                <img src="" alt="User avatar" class="profile-avatar" id="profile-avatar">
+                <div class="profile-details">
+                    <h4 id="profile-name">User</h4>
+                    <p id="profile-role">Admin</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation Links -->
+        <nav class="sidebar-nav">
+            <ul>
+                <li><a href="index.html"><span class="nav-icon">🏠</span> Home</a></li>
+                <li><a href="about.html"><span class="nav-icon">ℹ️</span> About</a></li>
+                <li id="dashboard-link" style="display: none;">
+                    <a href="author-dashboard.html"><span class="nav-icon">📊</span> Dashboard</a>
+                </li>
+                <li id="admin-link" style="display: none;">
+                    <a href="admin-dashboard.html" class="active"><span class="nav-icon">👑</span> Admin Panel</a>
+                </li>
+                <li id="auth-link">
+                    <a href="auth.html"><span class="nav-icon">🔑</span> Login</a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Logout Button (shown when logged in) -->
+        <div class="sidebar-footer" id="sidebar-footer" style="display: none;">
+            <button id="sidebar-logout">🚪 Logout</button>
+        </div>
+    </aside>
+
+    <!-- Mobile Toggle Button -->
+    <button class="sidebar-toggle" id="sidebar-toggle" aria-label="Toggle sidebar">☰</button>
+
+    <!-- Main Content Wrapper -->
+    <div class="main-wrapper">
+        <main class="content">
+            <div class="dashboard-container">
+                <div class="dashboard-header">
+                    <div>
+                        <h1>Admin Dashboard</h1>
+                        <p>Manage posts and review submissions</p>
+                    </div>
+                </div>
+
+                <!-- Stats -->
+                <div class="stats-grid">
+                    <div class="stat-card glass">
+                        <div class="stat-number" id="stat-pending">0</div>
+                        <div class="stat-label">Pending Review</div>
+                    </div>
+                    <div class="stat-card glass">
+                        <div class="stat-number" id="stat-published">0</div>
+                        <div class="stat-label">Published</div>
+                    </div>
+                    <div class="stat-card glass">
+                        <div class="stat-number" id="stat-rejected">0</div>
+                        <div class="stat-label">Rejected</div>
+                    </div>
+                    <div class="stat-card glass">
+                        <div class="stat-number" id="stat-total">0</div>
+                        <div class="stat-label">Total Posts</div>
+                    </div>
+                </div>
+
+                <!-- Tabs -->
+                <div class="tabs">
+                    <button class="tab active" data-tab="pending">Pending Review</button>
+                    <button class="tab" data-tab="published">Published</button>
+                    <button class="tab" data-tab="all">All Posts</button>
+                </div>
+
+                <!-- Posts Grid -->
+                <div id="posts-container" class="posts-grid">
+                    <div class="empty-state">
+                        <h3>Loading posts...</h3>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Rejection Modal -->
+        <div id="rejection-modal" class="rejection-modal">
+            <div class="modal-content">
+                <h2>Reject Post</h2>
+                <p style="color: var(--text-secondary); margin: 1rem 0;">Provide a reason for rejection (optional):</p>
+                <textarea id="rejection-reason"
+                    style="width: 100%; min-height: 100px; padding: 1rem; border-radius: 8px; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); color: var(--text-main);"
+                    placeholder="Let the author know what needs to be improved..."></textarea>
+                <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                    <button class="reject-btn" id="confirm-reject-btn" style="flex: 1;">Reject Post</button>
+                    <button class="filter-btn" id="cancel-reject-btn" style="flex: 1;">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="js/admin-dashboard.js"></script>
+    <script type="module" src="js/sidebar.js"></script>
+</body>
+
+</html>
